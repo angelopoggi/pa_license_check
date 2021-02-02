@@ -1,0 +1,4 @@
+
+        [console_scripts]
+        licensecheck=license_check:lc_check
+    
