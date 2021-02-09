@@ -11,7 +11,10 @@ from configparser import ConfigParser
 @click.option('--client', help='Client name as defined in the fw_key.ini file')
 def lc_check(client):
     fw_config = ConfigParser()
-    fw_config.read('fw_key.ini')
+    try:
+        fw_config.read('fw_key.ini')
+    except:
+        print('error reading fw_key.ini file! Make sure that it exsits')
     selected_fw = fw_config.get(section=client, option='fw')
     selected_key = fw_config.get(section=client, option='key')
 
