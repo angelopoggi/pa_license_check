@@ -48,7 +48,6 @@ def lc_check(client):
                 definedExitCode = 0
         else:
             continue
-    print(definedExitCode)
     
     if definedExitCode == 1:
             alertMessage(definedExitCode,list(featureDict["Features"].keys()), featureDict["Features"][feature])
