@@ -1,8 +1,8 @@
-# Palo Alto License Check
+## Palo Alto License Check
 
 Simple script to be integrated into Icinga to alert the Webair team when  firewall is set to expire in 60 days, 3 days or has already expired.
 
-# Installation
+## Installation
 
 included is a setup.py file. You can simple run
 
@@ -12,7 +12,7 @@ pip install --editable .
 
 This will install a CLI tool called 'licensecheck'. At the moment it only has one argument '--client'.
 
-# How it works
+## How it works
 
 The primary purpose for this script was as a stop gap between implementing Panorama and the lack of system expiration date from the SNMP MIBs that are included
 in netmon.
