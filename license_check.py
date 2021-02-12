@@ -28,7 +28,8 @@ def lc_check(client):
         print(f"{selected_fw} is not reachable, please check spelling or availability")
     xml_response = ET.fromstring(response)
 
-    expirationWindow = datetime.now().date() + timedelta(days=60)
+    WarningexpirationWindow = datetime.now().date() + timedelta(days=60)
+    ErrorexpirationWindow = datetime.now().date() + timedelta(days=3)
 
     featureDict = {}
     featureDict['Features'] = {}
@@ -40,25 +41,34 @@ def lc_check(client):
             expires = item.text
             expires_time = parse(expires).date()
             
-            if expirationWindow > expires_time:
+            if WarningexpirationWindow <= expires_time:
                 featureDict['Features'][feature] = str(expires_time)
                 definedExitCode = 1
 
-            else:
-                definedExitCode = 0
+            elif ErrorexpirationWindow > expires_time:
+                featureDict['Features'][feature] = str(expires_time)
+                definedExitCode = 2
+
         else:
             continue
     
     if definedExitCode == 1:
             alertMessage(definedExitCode,list(featureDict["Features"].keys()), featureDict["Features"][feature])
+
+    elif definedExitCode == 2:
+        alertMessage(definedExitCode, list(featureDict["Features"].keys()), featureDict["Features"][feature])
     elif definedExitCode == 0:
         alertMessage(definedExitCode, f"{selected_fw} has valid licensing")
 
 
-def alertMessage(exitcode,statement1, *args):
+
+
+def alertMessage(exitcode, statement1, *args):
     if exitcode == 1:
-        print(f"feature: {statement1} has expired. Expiration date was {args}")
+        print(f"feature: {statement1} is Expiring within 60 days! Expiration date is {args}")
         sys.exit(1)
+    elif exitcode == 2:
+        print(f"feature: {statement1} has expired! Expiration date is {args}")
     elif exitcode == 0:
         print(statement1)
         sys.exit(0)
