@@ -91,6 +91,7 @@ def lc_check(client):
 #If CustomExitCode is 1; Warning, Hit 60 days
 #if CustomExitCode is 2; Warning, Coutning down from 60 days
 #if CustomExitCode is 3; Error, we are less than 3 days from expiration
+#If CustomExitCode is 4; We are past expiration date
 
 
 def alertMessage(CustomExitCode,statement, ClientFirwall,  expirationdate, daysleft=1):
