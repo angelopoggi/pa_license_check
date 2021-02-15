@@ -42,8 +42,14 @@ licensecheck --client webair
 
 it will return this sample depending on the expiration date & times
 
+Expired Firewall
 ```bash
-feature: ['WildFire License', 'PAN-DB URL Filtering', 'Threat Prevention', 'Premium', 'DNS Security', 'GlobalProtect Gateway'] has expired! Expiration date is ('2020-11-14',)
+jovia-pa-fw1.gsc.hostedserver.net expired! Expiration was 2020-11-14. Please order a renewal quote
+```
+
+Firewall with valid licensing
+```bash
+nyserda-pa-fw1.gsc.hostedserver.net has more than 60 days of Valid licensing
 ```
 
 
