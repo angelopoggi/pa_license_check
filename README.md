@@ -1,4 +1,4 @@
-## Palo Alto License Check
+# Palo Alto License Check
 
 Simple script to be integrated into Icinga to alert the Webair team when  firewall is set to expire in 60 days, 3 days or has already expired.
 
