@@ -47,6 +47,15 @@ Expired Firewall
 jovia-pa-fw1.gsc.hostedserver.net expired! Expiration was 2020-11-14. Please order a renewal quote
 ```
 
+Firewall that is expiring within 60 days
+```bash
+PENDING OUTPUT
+```
+Firewall that is expiring within 3 days
+```bash
+PENDING OUTPUT
+```
+
 Firewall with valid licensing
 ```bash
 nyserda-pa-fw1.gsc.hostedserver.net has more than 60 days of Valid licensing
