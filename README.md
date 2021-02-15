@@ -29,11 +29,11 @@ which indicates critical error. This will help give us visibility into the Palo 
 The script utilizes a "Cusom Exit Code" to keep track of various states. 
 
 ```text
-#CustomExitCode is 0; Everything is ok
-#CustomExitCode is 1; Warning, Hit 60 days
-#CustomExitCode is 2; Warning, Coutning down from 60 days
-#CustomExitCode is 3; Error, we are less than 3 days from expiration
-#CustomExitCode is 4; We are past expiration date
+CustomExitCode is 0; Everything is ok
+CustomExitCode is 1; Warning, Hit 60 days
+CustomExitCode is 2; Warning, Coutning down from 60 days
+CustomExitCode is 3; Error, we are less than 3 days from expiration
+CustomExitCode is 4; We are past expiration date
 ```
 
 # Running the script
