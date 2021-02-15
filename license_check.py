@@ -28,8 +28,11 @@ def lc_check(client):
         print(f"{selected_fw} is not reachable, please check spelling or availability")
     xml_response = ET.fromstring(response)
 
+    #All the date variables
+    TodaysDate = datetime.now().date()
     WarningexpirationWindow = datetime.now().date() + timedelta(days=60)
     ErrorexpirationWindow = datetime.now().date() + timedelta(days=3)
+
 
     featureDict = {}
     featureDict['Features'] = {}
@@ -40,38 +43,69 @@ def lc_check(client):
         elif 'expires' in item.tag and 'Never' not in item.text:
             expires = item.text
             expires_time = parse(expires).date()
-            
-            if WarningexpirationWindow <= expires_time:
-                featureDict['Features'][feature] = str(expires_time)
-                definedExitCode = 1
+            DateValue = expires_time - TodaysDate
+            WarningDaysLeft = expires_time - WarningexpirationWindow
+            ErrorDaysLeft = expires_time - ErrorexpirationWindow
+            #if TodaysDate minus Expires time IS greater thant Warning Window, No error - everything is ok!
 
-            elif ErrorexpirationWindow > expires_time:
+            if DateValue.days > 60:
+                CustomExitCode = 0
+            # if todays date minus the expiration date is equal to Warning Window, throw error
+            elif DateValue.days == 60:
                 featureDict['Features'][feature] = str(expires_time)
-                definedExitCode = 2
+                CustomExitCode = 1
+            # if todays date minus the expiration date is less than the Warning Window AND greater than the Error window, throw the error
+            # So if window is less than 60 but greater than 3
+            elif DateValue.days < 60 and DateValue.days > 3:
+                featureDict['Features'][feature] = str(expires_time)
+                CustomExitCode = 2
+            # if todays date minus the expiration date IS less than error window, throw the error!
+            elif DateValue.days < 3:
+                featureDict['Features'][feature] = str(expires_time)
+                CustomExitCode = 3
 
         else:
             continue
-    
-    if definedExitCode == 1:
-            alertMessage(definedExitCode,list(featureDict["Features"].keys()), featureDict["Features"][feature])
+    #not sure why I need this here, but I do otherwise non expired clients pulls error :think:
+    featureDict['Features'][feature] = str(expires_time)
 
-    elif definedExitCode == 2:
-        alertMessage(definedExitCode, list(featureDict["Features"].keys()), featureDict["Features"][feature])
-    elif definedExitCode == 0:
-        alertMessage(definedExitCode, f"{selected_fw} has valid licensing")
+    if CustomExitCode == 1:
+        #code - statement - firewall name - Days left (2 and above)
+        alertMessage(CustomExitCode,list(featureDict["Features"].keys()), selected_fw, featureDict['Features'][feature])
+    elif CustomExitCode == 2:
+        alertMessage(CustomExitCode, list(featureDict["Features"].keys()), selected_fw,featureDict['Features'][feature], WarningDaysLeft.days)
+    elif CustomExitCode == 3:
+        alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature], ErrorDaysLeft.days)
+    elif CustomExitCode == 0:
+        alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature])
+
+#If CustomExitCode is 0; Everything is ok
+#If CustomExitCode is 1; Warning, Hit 60 days
+#if CustomExitCode is 2; Warning, Coutning down from 60 days
+#if CustomExitCode is 3; Error, we are less than 3 days from expiration
 
 
-
-
-def alertMessage(exitcode, statement1, *args):
-    if exitcode == 1:
-        print(f"feature: {statement1} is Expiring within 60 days! Expiration date is {args}")
+def alertMessage(CustomExitCode, ClientFirwall, statement, expirationdate, daysleft=1):
+    if CustomExitCode == 1:
+        print(f"feature set: {statement} on {ClientFirwall} has hit 60 day Expiration Mark. Please order renewal quote ")
         sys.exit(1)
-    elif exitcode == 2:
-        print(f"feature: {statement1} has expired! Expiration date is {args}")
-    elif exitcode == 0:
-        print(statement1)
+    elif CustomExitCode == 2:
+        print(f"feature set: {statement} on {ClientFirwall} has {daysleft} before expiration. Please order a renewal quote")
+        sys.exit(1)
+    elif CustomExitCode == 3:
+        print(f"feature set: {statement} on {ClientFirwall} has less than {daysleft} before expiration. Expiration date is {expirationdate}")
+        sys.exit(2)
+    elif CustomExitCode == 0:
+        print(f"{ClientFirwall} has more than 60 days of Valid licensing")
         sys.exit(0)
+
+
+
+
+
+
+
+
 
 
 
