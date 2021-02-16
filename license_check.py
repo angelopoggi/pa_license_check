@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 import click
 from configparser import ConfigParser
 import sys
-import json
 
 
 @click.command()
@@ -31,7 +30,7 @@ def lc_check(client):
     #All the date variables
     TodaysDate = datetime.now().date()
     WarningexpirationWindow = datetime.now().date() + timedelta(days=60)
-    ErrorexpirationWindow = datetime.now().date() + timedelta(days=3)
+    ErrorexpirationWindow = datetime.now().date() + timedelta(days=15)
 
 
     featureDict = {}
@@ -50,7 +49,6 @@ def lc_check(client):
             #logic for OVER EXPIRED Firewalls (negative numbers)
             if DateValue.days <= 0:
                 CustomExitCode = 4
-
             #if TodaysDate minus Expires time IS greater thant Warning Window, No error - everything is ok!
             elif DateValue.days > 60:
                 CustomExitCode = 0
@@ -60,30 +58,27 @@ def lc_check(client):
                 CustomExitCode = 1
             # if todays date minus the expiration date is less than the Warning Window AND greater than the Error window, throw the error
             # So if window is less than 60 but greater than 3
-            elif DateValue.days < 60 and DateValue.days > 3 :
+            elif DateValue.days < 60 and DateValue.days > 15 :
                 featureDict['Features'][feature] = str(expires_time)
                 CustomExitCode = 2
             # if todays date minus the expiration date IS less than error window, throw the error!
-            elif DateValue.days < 3:
+            elif DateValue.days < 15:
                 featureDict['Features'][feature] = str(expires_time)
                 CustomExitCode = 3
-
         else:
             continue
     #not sure why I need this here, but I do otherwise non expired clients pulls error :think:
     featureDict['Features'][feature] = str(expires_time)
 
-    if CustomExitCode == 1:
-        #code - statement - firewall name - Days left (2 and above)
+    if CustomExitCode == 0:
+        alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature])
+    elif CustomExitCode == 1:
         alertMessage(CustomExitCode,list(featureDict["Features"].keys()), selected_fw, featureDict['Features'][feature])
     elif CustomExitCode == 2:
         alertMessage(CustomExitCode, list(featureDict["Features"].keys()), selected_fw,featureDict['Features'][feature], WarningDaysLeft.days)
     elif CustomExitCode == 3:
         alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature], ErrorDaysLeft.days)
     elif CustomExitCode == 4:
-        alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature])
-
-    elif CustomExitCode == 0:
         alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature])
 
 
@@ -93,24 +88,29 @@ def lc_check(client):
 #if CustomExitCode is 3; Error, we are less than 3 days from expiration
 #If CustomExitCode is 4; We are past expiration date
 
-
 def alertMessage(CustomExitCode,statement, ClientFirwall,  expirationdate, daysleft=1):
-    if CustomExitCode == 1:
-        print(f"feature set: {statement} on {ClientFirwall} has hit 60 day Expiration Mark. Please order renewal quote ")
-        sys.exit(1)
-    elif CustomExitCode == 2:
-        print(f"feature set: {statement} on {ClientFirwall} has {daysleft} before expiration. Please order a renewal quote")
-        sys.exit(1)
-    elif CustomExitCode == 3:
-        print(f"feature set: {statement} on {ClientFirwall} has less than {daysleft} before expiration. Expiration date is {expirationdate}")
-        sys.exit(2)
-    elif CustomExitCode == 4:
-        print(f"{ClientFirwall} expired! Expiration was {expirationdate}. Please order a renewal quote")
-        sys.exit(2)
-
-    elif CustomExitCode == 0:
+    if CustomExitCode == 0:
         print(f"{ClientFirwall} has more than 60 days of Valid licensing")
         sys.exit(0)
+    elif CustomExitCode == 1:
+        print(f"feature set: {statement} on {ClientFirwall} has hit 60 day Expiration Mark. Please order renewal quote\nSee here to oder a quote: https://confluence.webair.com:8443/display/WO/Deploying+a+Palo+Alto+Virtual+Firewall ")
+        sys.exit(1)
+    elif CustomExitCode == 2:
+        print(f"feature set: {statement} on {ClientFirwall} has {daysleft} before expiration. Please order a renewal quote\nSee here to oder a quote: https://confluence.webair.com:8443/display/WO/Deploying+a+Palo+Alto+Virtual+Firewall")
+        sys.exit(1)
+    elif CustomExitCode == 3:
+        print(f"feature set: {statement} on {ClientFirwall} has less than {daysleft} before expiration. Expiration date is {expirationdate} Please order a renewal quote!\nSee here to oder a quote: https://confluence.webair.com:8443/display/WO/Deploying+a+Palo+Alto+Virtual+Firewall")
+        sys.exit(2)
+    elif CustomExitCode == 4:
+        print(f"{ClientFirwall} expired! Expiration was {expirationdate}. Please order a renewal quote\nSee here to oder a quote: https://confluence.webair.com:8443/display/WO/Deploying+a+Palo+Alto+Virtual+Firewall")
+        sys.exit(2)
+
+
+
+
+
+
+
 
 
 
