@@ -24,9 +24,10 @@ which indicates critical error. This will help give us visibility into the Palo 
 
 60 days was chosen to allow ample time for Support or the Provisioning team to request a renewal quote and proceed through the Kissflow process.
 
-# Consideration
+# Custom Exit Codes
 
-The script utilizes a "Cusom Exit Code" to keep track of various states. 
+The script utilizes a "Cusom Exit Code" to keep track of various states. This is not to be confused with the system exit codes, which are used to tell Icinga what severity.
+This is strictly for keeping track within the function itself!
 
 ```text
 CustomExitCode is 0; Everything is ok
@@ -42,7 +43,7 @@ The script contains an .ini file which is used to store the clients firewall API
 the configuration looks like this.
 
 ```bash
-[webiar]
+[webair]
 key = SuperSecureKey
 fw = webair-demo-fw.gsc.hostedserver.net
 ```
@@ -73,6 +74,9 @@ Firewall with valid licensing
 nyserda-pa-fw1.gsc.hostedserver.net has more than 60 days of Valid licensing
 ```
 
+# Future add ons
+
+It could be possible to have the script walk the user through generating the API key and adding in extra lines into the INI file to simplify setup.
 
 
 
