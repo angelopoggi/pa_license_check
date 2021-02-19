@@ -1,3 +1,4 @@
+#! /usr/bin/
 from setuptools import setup
 
 setup(

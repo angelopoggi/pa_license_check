@@ -1,11 +1,18 @@
-#(C) Webair 2021
+#(C)Webair 2021 - Angelo Poggi
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import xml.etree.ElementTree as ET
 from dateutil.parser import parse
 from datetime import datetime, timedelta
 import click
 from configparser import ConfigParser
 import sys
+
+# Suppress InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+# above stopped working, updating exceptions syntax
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 @click.command()
@@ -71,7 +78,7 @@ def lc_check(client):
     featureDict['Features'][feature] = str(expires_time)
 
     if CustomExitCode == 0:
-        alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature])
+        alertMessage(CustomExitCode, list(featureDict["Features"].keys()),selected_fw,featureDict['Features'][feature],DateValue.days)
     elif CustomExitCode == 1:
         alertMessage(CustomExitCode,list(featureDict["Features"].keys()), selected_fw, featureDict['Features'][feature])
     elif CustomExitCode == 2:
@@ -85,12 +92,12 @@ def lc_check(client):
 #If CustomExitCode is 0; Everything is ok
 #If CustomExitCode is 1; Warning, Hit 60 days
 #if CustomExitCode is 2; Warning, Coutning down from 60 days
-#if CustomExitCode is 3; Error, we are less than 3 days from expiration
+#if CustomExitCode is 3; Error, we are less than 15 days from expiration
 #If CustomExitCode is 4; We are past expiration date
 
 def alertMessage(CustomExitCode,statement, ClientFirwall,  expirationdate, daysleft=1):
     if CustomExitCode == 0:
-        print(f"{ClientFirwall} has more than 60 days of Valid licensing")
+        print(f"{ClientFirwall} has more than {daysleft} days of Valid licensing")
         sys.exit(0)
     elif CustomExitCode == 1:
         print(f"feature set: {statement} on {ClientFirwall} has hit 60 day Expiration Mark. Please order renewal quote\nSee here to oder a quote: https://confluence.webair.com:8443/display/WO/Deploying+a+Palo+Alto+Virtual+Firewall ")
