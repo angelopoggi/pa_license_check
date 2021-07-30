@@ -138,3 +138,5 @@ dmypy.json
 cython_debug/
 *.egg.info
 *.egg.info/
+*.idea
+*.idea/
