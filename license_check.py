@@ -1,4 +1,4 @@
-#(C)Webair 2021 - Angelo Poggi
+#2021 - Angelo Poggi
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import xml.etree.ElementTree as ET
