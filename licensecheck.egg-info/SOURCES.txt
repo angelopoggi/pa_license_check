@@ -1,8 +1,0 @@
-license_check.py
-setup.py
-licensecheck.egg-info/PKG-INFO
-licensecheck.egg-info/SOURCES.txt
-licensecheck.egg-info/dependency_links.txt
-licensecheck.egg-info/entry_points.txt
-licensecheck.egg-info/requires.txt
-licensecheck.egg-info/top_level.txt
