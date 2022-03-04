@@ -4,18 +4,21 @@ Simple script to be integrated into Icinga to alert the Webair team when  firewa
 
 ## Installation
 
-included is a setup.py file. You can simple run
-
+You can install this through PyPI using pip
 ```bash
-pip install --editable .
+pip install pa-license-check
 ```
 
-This will install a CLI tool called 'licensecheck'. At the moment it only has one argument '--client'.
+This will install a CLI tool called 'palicensecheck'. It will allow you to do the following
+
+1 - Create an INI file that it uses to read the firewall
+2 - Adds new clients to the INI File
+3 - Checks the licensing status and returns an exit code
 
 ## How it works
 
 The primary purpose for this script was as a stop gap between implementing Panorama and the lack of system expiration date from the SNMP MIBs that are included
-in netmon.
+in Monitoring Software like LibreNMS.
 
 The script makes an API call to the chosen firewall and parses through the XML its returned. It grabs the feature name and the expiration date.
 It checks the expiration date against the current date. If the firewall expiration date is greater than 60 days, it returns a system code of 0 which indicates
@@ -27,7 +30,7 @@ which indicates critical error. This will help give us visibility into the Palo 
 # Custom Exit Codes
 
 The script utilizes a "Cusom Exit Code" to keep track of various states. This is not to be confused with the system exit codes, which are used to tell Icinga what severity.
-This is strictly for keeping track within the function itself!
+This is strictly for keeping track within the function itself! I decided to Document it in case anyone wanted to expand on this.
 
 ```text
 CustomExitCode is 0; Everything is ok
@@ -39,45 +42,80 @@ CustomExitCode is 4; We are past expiration date
 
 # Running the script
 
-The script contains an .ini file which is used to store the clients firewall API key as well as the host name.
-the configuration looks like this.
+## Generating INI File
+---
+
+On the first initial run, you'll need to build the INI file. You can easily do this by running
 
 ```bash
-[webair]
-key = SuperSecureKey
-fw = webair-demo-fw.gsc.hostedserver.net
+palicensecheck create-ini-file
 ```
-You can then run the script as follows
+
+It will then ask you a series of questions
+
+```text
+please enter the firewall you wish to monitor
+hank.kingofthe.hill
+please enter the Firewall Key
+wah5eeGhee7thah2waechohshai6ah6iphugh4ahpoophaeva0aeTutah6ohSooPopane
+Please enter the clients name, I.E. ACME
+Strikland
+
+It will then create the INI file in the root directory of the script
+Which will look like this.
+
+```text
+['Strikland']
+key = wah5eeGhee7thah2waechohshai6ah6iphugh4ahpoophaeva0aeTutah6ohSooPopane
+fw = hank.kingofthe.hill
+
+## Adding clients to the INI file
+
+You can easily add new clients to the INI file by running the following command
 
 ```bash
-licensecheck --client webair
+palicensecheck add-client-ini
 ```
 
-it will return this sample depending on the expiration date & times
+It will then walk you through a series of questions to help build the file.
 
-Expired Firewall
 ```bash
-jovia-pa-fw1.gsc.hostedserver.net expired! Expiration was 2020-11-14. Please order a renewal quote
+please enter the firewall you wish to monitor
+thatherton.fueles.demo
+please enter the Firewall Key
+oogoo1eec0ef0ong2ix0sheingughae8oongiebaicee3que0ShaD6rau0Looch9
+Please enter the clients name, I.E. ACME
+thatherton
+fw_key.ini file appended with new information
 ```
 
-Firewall that is expiring within 60 days
+here we can see the expanded file
+
+```text
+['Strikland']
+key = wah5eeGhee7thah2waechohshai6ah6iphugh4ahpoophaeva0aeTutah6ohSooPopane
+fw = hank.kingofthe.hill
+['thatherton']
+key = oogoo1eec0ef0ong2ix0sheingughae8oongiebaicee3que0ShaD6rau0Looch9
+fw = thatherton.fueles.demo
+```
+
+## Checking the license Status
+
+To run the script and check the status, simply run the following command
+
 ```bash
-PENDING OUTPUT
-```
-Firewall that is expiring within 3 days
-```bash
-PENDING OUTPUT
+palicensecheck check-license --client strikland
 ```
 
-Firewall with valid licensing
-```bash
-nyserda-pa-fw1.gsc.hostedserver.net has more than 60 days of Valid licensing
-```
+Its important to remember that the argument after the --client param **must** match the group name in your INI file.
 
-# Future add ons
+# To Do
 
-It could be possible to have the script walk the user through generating the API key and adding in extra lines into the INI file to simplify setup.
+I cobbled this together to what it is today in a few hours time updating it.
+Please let me know if there are bugs, issues or any features you would like added.
 
-
+* Need to do testing against firewall that is online
+* Need to adjust some error catching
 
 

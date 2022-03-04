@@ -140,3 +140,7 @@ cython_debug/
 *.egg.info/
 *.idea
 *.idea/
+
+#whatever this is
+licensecheck.egg-info
+/fw_key.ini
