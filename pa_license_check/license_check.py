@@ -130,24 +130,3 @@ class LicenseCheck:
         elif CustomExitCode == 4:
             print(f"{ClientFirwall} expired! Expiration was {expirationdate}. Please order a renewal quote\nSee here to oder a quote: https://confluence.webair.com:8443/display/WO/Deploying+a+Palo+Alto+Virtual+Firewall")
             sys.exit(2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
