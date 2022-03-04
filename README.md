@@ -1,6 +1,7 @@
 # Palo Alto License Check
 
-Simple script to be integrated into Icinga to alert the Webair team when  firewall is set to expire in 60 days, 3 days or has already expired.
+Simple script to be integrated into Icinga to alert the NOC team when firewall is set to expire in 60 days, 3 days or has already expired.
+This was built as a solution where Palo Altos Panorama is not configured or to costly.
 
 ## Installation
 
@@ -11,9 +12,9 @@ pip install pa-license-check
 
 This will install a CLI tool called 'palicensecheck'. It will allow you to do the following
 
-1 - Create an INI file that it uses to read the firewall
-2 - Adds new clients to the INI File
-3 - Checks the licensing status and returns an exit code
+1. Create an INI file that it uses to read the firewall
+2. Adds new clients to the INI File
+3. Checks the licensing status and returns an exit code
 
 ## How it works
 
@@ -43,7 +44,7 @@ CustomExitCode is 4; We are past expiration date
 # Running the script
 
 ## Generating INI File
----
+
 
 On the first initial run, you'll need to build the INI file. You can easily do this by running
 
@@ -66,7 +67,7 @@ It will then create the INI file in the root directory of the script
 Which will look like this.
 
 ```text
-['Strikland']
+[strikland]
 key = wah5eeGhee7thah2waechohshai6ah6iphugh4ahpoophaeva0aeTutah6ohSooPopane
 fw = hank.kingofthe.hill
 ```
@@ -117,7 +118,8 @@ Its important to remember that the argument after the --client param **must** ma
 I cobbled this together to what it is today in a few hours time updating it.
 Please let me know if there are bugs, issues or any features you would like added.
 
-* Need to do testing against firewall that is online
+* Testing against various firewalls
+* Implement API Automatic Key creation for easier deployment
 * Need to adjust some error catching
 
 
