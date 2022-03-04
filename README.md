@@ -60,6 +60,7 @@ please enter the Firewall Key
 wah5eeGhee7thah2waechohshai6ah6iphugh4ahpoophaeva0aeTutah6ohSooPopane
 Please enter the clients name, I.E. ACME
 Strikland
+```
 
 It will then create the INI file in the root directory of the script
 Which will look like this.
@@ -68,6 +69,7 @@ Which will look like this.
 ['Strikland']
 key = wah5eeGhee7thah2waechohshai6ah6iphugh4ahpoophaeva0aeTutah6ohSooPopane
 fw = hank.kingofthe.hill
+```
 
 ## Adding clients to the INI file
 
@@ -92,10 +94,10 @@ fw_key.ini file appended with new information
 here we can see the expanded file
 
 ```text
-['Strikland']
+[strikland]
 key = wah5eeGhee7thah2waechohshai6ah6iphugh4ahpoophaeva0aeTutah6ohSooPopane
 fw = hank.kingofthe.hill
-['thatherton']
+[thatherton]
 key = oogoo1eec0ef0ong2ix0sheingughae8oongiebaicee3que0ShaD6rau0Looch9
 fw = thatherton.fueles.demo
 ```
